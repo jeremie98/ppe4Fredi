@@ -23,6 +23,24 @@ $(function(){
     }
     
     /*-------------------Page inscription ----------------------*/
+    $('#inscription').ready(maFonctionLigue);
+    function maFonctionLigue(){
+        $.post("ajax/traiterligues.php",{
+            
+        }, foncRetourLigues, "json");
+    }
+    
+    function foncRetourLigues(lesLigues){
+        for(i=0; i<lesLigues.length; i++){
+            var uneLigue=lesLigues[i];
+            var idLigue=uneLigue['numeroligue'];
+            var nomLigue=uneLigue['nom'];
+            
+            html="<option value="+idLigue+">"+nomLigue+"</option>";
+            $('#inscription #inscriptionliguesp').append(html);
+        }
+    }
+    
     $('#inscription #btninscription').bind("click", fonctionInscription);
     function fonctionInscription(e){
         e.preventDefault();
@@ -69,5 +87,5 @@ $(function(){
         }    
     }
     
-
+    
 })

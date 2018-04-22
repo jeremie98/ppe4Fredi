@@ -16,4 +16,4 @@
     $newadherent = $pdo->getInscription($numlicence, $mail, $mdp, $sexe, $nom, $prenom, $ddn, $numligue, $rue, $cp, $ville);
     
     echo json_encode($newadherent);
-    
+?>    

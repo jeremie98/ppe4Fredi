@@ -10,7 +10,7 @@
 
             <label for="liguesp">Ligue sportive*</label>
             <select name="liguesp" id="inscriptionliguesp">
-                <option value="1">Ligue de Tennis</option>
+                <!-- Remplissage dynamique avec les données issues de la bdd-->
             </select><br/>
             
             <label for="nom">Nom</label><input type="text" size="30" name="nom" id="inscriptionnom"/><br/>

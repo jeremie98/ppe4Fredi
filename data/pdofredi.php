@@ -101,4 +101,17 @@ class PdoFredi{
             
             return $resultat;
         }
+        
+        /**
+         * Retourne l'id et le libellé des ligues 
+         * @return le résultat du tableau associatif
+         */
+        public function getLiguesSportives(){
+            $req = "select numeroligue, nom from ligues order by nom asc";
+            $stm = self::$monPdo->prepare($req);
+            $stm->execute();
+            
+            $lesLignes = $stm->fetchall();
+            return $lesLignes;
+        }
 }
