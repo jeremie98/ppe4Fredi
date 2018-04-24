@@ -114,4 +114,15 @@ class PdoFredi{
             $lesLignes = $stm->fetchall();
             return $lesLignes;
         }
+        
+        public function getLigueAffiliee($login){
+            $req = "SELECT ligues.Nom from ligues, adherents where adressemail= ? and ligues.numeroligue=adherents.numligue";
+            
+            $stm = self::$monPdo->prepare($req);
+            $stm->bindParam(1, $login);
+            $stm->execute();
+            $laLigne = $stm->fetch();
+            
+            return $laLigne;
+        }
 }

@@ -23,7 +23,7 @@ $(function(){
     }
     
     /*-------------------Page inscription ----------------------*/
-    $('#inscription').ready(maFonctionLigue);
+    $('#liinscription').bind("click", maFonctionLigue);
     function maFonctionLigue(){
         $.post("ajax/traiterligues.php",{
             
@@ -84,8 +84,61 @@ $(function(){
             document.location.href="#connexion";
             $("#connexion #message").css({color:'green'});
             $("#connexion #message").html("Vous avez bien été enregistré, vous pouvez vous connecter !");
-        }    
+        }     
     }
     
+    /*-------------------Page Mes informations ----------------------*/
+    $('#btnmesinformations').bind("click", maFonctionLigueAffiliee);
+    function maFonctionLigueAffiliee(){
+        var login = $("#connexion #login").val();
+        
+        $.post("ajax/traiterligueaffiliee.php",{
+            "login" : login},
+        foncRetourLigueAffiliee, "json");
+    }
     
+    var ligueAffiliee;
+    
+    function foncRetourLigueAffiliee(ligueaff){
+        ligueAffiliee = ligueaff['Nom'];
+    }
+    
+    $('#btnmesinformations').bind("click", maFonctionInformations);
+    function maFonctionInformations(){
+        var login = $("#connexion #login").val();
+        var motdepasse = $("#connexion #motdepasse").val();
+        
+        $.post("ajax/traitermesinformations.php",{
+            "login" : login,
+            "motdepasse" : motdepasse},
+        foncRetourInfos, "json");
+    }
+    
+    function foncRetourInfos(lesinfos){
+        var licence = lesinfos['numerolicence'];
+        var ligue = ligueAffiliee;
+        var nom = lesinfos['Nom'];
+        var prenom = lesinfos['Prenom'];
+        var ddn = lesinfos['ddnaissance'];
+        var sexe = lesinfos['sexe'];
+        var mail = lesinfos['adressemail'];
+        
+        var rue = lesinfos['rue'];
+        var cp = lesinfos['cp'];
+        var ville = lesinfos['ville'];
+        
+        
+        html="<p><b>Numéro licence : </b>"+licence+"</p>";
+        html+="<p><b>Ligue d'affiliation : </b>"+ligue+"</p>";
+        html+="<p><b>Nom : </b>"+nom+"</p>";
+        html+="<p><b>Prénom : </b>"+prenom+"</p>";
+        html+="<p><b>Date de naissance (jj/mm/aaaa) : </b>"+ddn+"</p>";
+        html+="<p><b>Sexe : </b>"+sexe+"</p>";
+        html+="<p><b>Adresse e-mail : </b>"+mail+"</p>";
+        html+="<p><b>Adresse : </b>"+rue+", "+ville+", "+cp+"</p>";
+
+        $('#mesinformations #mesinfos').append(html);        
+    }
+    
+
 })

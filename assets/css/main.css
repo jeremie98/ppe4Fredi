@@ -1483,7 +1483,11 @@
 			border-radius: 4px;
 			opacity: 0;
 		}
-
+                
+                #main article#.active{
+                    width: 70rem;
+                }
+                
 			#main article.active {
 				-moz-transform: translateY(0);
 				-webkit-transform: translateY(0);
