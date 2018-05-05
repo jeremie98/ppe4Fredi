@@ -5,6 +5,9 @@
     include_once 'vues/pageinscription.php';   
     include_once 'vues/pageinformations.php';
     include_once 'vues/pagebordereau.php';
+    include_once 'vues/pagesaisirfrais.php';
+    include_once 'vues/pagesaisirdemandeurs.php';    
+    include_once 'vues/pageafficherfrais.php';    
     include_once 'vues/pagecontact.php';  
     include_once 'vues/pagetableaudebord.php';
     include_once 'vues/piedpage.html';

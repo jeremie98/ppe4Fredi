@@ -15,10 +15,10 @@
 
 class PdoFredi{
     	 /*--------------------Version locale---------------------------------------- */
-      private static $serveur='mysql:host=localhost';
-      private static $bdd='dbname=bd_fredi';   		
-      private static $user='root' ;    		
-      private static $mdp='' ;
+      private static $serveur='mysql:host=mysql.hostinger.fr';
+      private static $bdd='dbname=u648095331_bdsi';   		
+      private static $user='u648095331_jp' ;    		
+      private static $mdp='jpelage' ;
       private static $monPdo;
       private static $monPdoFredi = null;
 /**
@@ -222,4 +222,3 @@ class PdoFredi{
             return $lesLignes;
         }
 }
-

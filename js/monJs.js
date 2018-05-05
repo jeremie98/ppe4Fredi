@@ -1,6 +1,6 @@
 $(function(){
     /*-------------------Page connexion----------------------*/
-    $('#connexion #btnconnexion').bind("click", fonctionConnexion);
+    $('#connexion #btnconnexion').click(fonctionConnexion);
     function fonctionConnexion(e){
         e.preventDefault();
         var login = $("#connexion #login").val();
@@ -13,6 +13,7 @@ $(function(){
     
     function foncRetourConnexion(data){
         if(data != null){
+            window.numlicence=data['numerolicence'];
             console.log("connexion ok ! ");
             document.location.href="#tableaudebord";
         }
@@ -23,25 +24,30 @@ $(function(){
     }
     
     /*-------------------Page inscription ----------------------*/
-    $('#liinscription').bind("click", maFonctionLigue);
-    function maFonctionLigue(){
+    $('#liinscription').click(maFonctionListeLigues);
+    function maFonctionListeLigues(){
         $.post("ajax/traiterligues.php",{
             
         }, foncRetourLigues, "json");
     }
     
     function foncRetourLigues(lesLigues){
+        
+        var ligues="";
+        $('#inscription #inscriptionliguesp').html(ligues);
+        
         for(i=0; i<lesLigues.length; i++){
             var uneLigue=lesLigues[i];
             var idLigue=uneLigue['numeroligue'];
             var nomLigue=uneLigue['nom'];
             
-            html="<option value="+idLigue+">"+nomLigue+"</option>";
-            $('#inscription #inscriptionliguesp').append(html);
+            ligues="<option value="+idLigue+">"+nomLigue+"</option>";
+            $('#inscription #inscriptionliguesp').append(ligues);
         }
+       
     }
     
-    $('#inscription #btninscription').bind("click", fonctionInscription);
+    $('#inscription #btninscription').click(fonctionInscription);
     function fonctionInscription(e){
         e.preventDefault();
         var login = $("#inscription #inscriptionlogin").val();
@@ -57,7 +63,7 @@ $(function(){
         var cp = $("#inscription #inscriptioncp").val();
         var ville = $("#inscription #inscriptionville").val();
         
-        if(login != "" & motdepasse != "" & confirmmdp != "" & numlicence != "" & liguesp != "" & motdepasse == confirmmdp){
+        if(motdepasse == confirmmdp){
             $.post("ajax/traiterinscription.php",{
             "login" : login,
             "motdepasse" : motdepasse,
@@ -74,36 +80,24 @@ $(function(){
         }  
         else{
             $("#inscription #message").css({color:'red'});
-            $("#inscription #message").html("Erreur lors de l'inscription.. Rééssayez !");
+            $("#inscription #message").html("Veuillez confirmez votre mot de passe !");
         }
     };
     
     function foncRetourInscription(data){
-        if(data = true){
-            console.log("inscription ok !");
+        if(data == true){
             document.location.href="#connexion";
             $("#connexion #message").css({color:'green'});
             $("#connexion #message").html("Vous avez bien été enregistré, vous pouvez vous connecter !");
-        }     
+        }
+        else{
+            $("#inscription #message").css({color:'red'});
+            $("#inscription #message").html("Erreur lors de l'inscription veuillez réessayez ...! ");
+        }
     }
     
     /*-------------------Page Mes informations ----------------------*/
-    $('#btnmesinformations').bind("click", maFonctionLigueAffiliee);
-    function maFonctionLigueAffiliee(){
-        var login = $("#connexion #login").val();
-        
-        $.post("ajax/traiterligueaffiliee.php",{
-            "login" : login},
-        foncRetourLigueAffiliee, "json");
-    }
-    
-    var ligueAffiliee;
-    
-    function foncRetourLigueAffiliee(ligueaff){
-        ligueAffiliee = ligueaff['Nom'];
-    }
-    
-    $('#btnmesinformations').bind("click", maFonctionInformations);
+    $('#btnmesinformations').click(maFonctionInformations);
     function maFonctionInformations(){
         var login = $("#connexion #login").val();
         var motdepasse = $("#connexion #motdepasse").val();
@@ -116,7 +110,7 @@ $(function(){
     
     function foncRetourInfos(lesinfos){
         var licence = lesinfos['numerolicence'];
-        var ligue = ligueAffiliee;
+        var ligue = lesinfos['ligueaffiliee'];
         var nom = lesinfos['Nom'];
         var prenom = lesinfos['Prenom'];
         var ddn = lesinfos['ddnaissance'];
@@ -128,17 +122,189 @@ $(function(){
         var ville = lesinfos['ville'];
         
         
-        html="<p><b>Numéro licence : </b>"+licence+"</p>";
-        html+="<p><b>Ligue d'affiliation : </b>"+ligue+"</p>";
-        html+="<p><b>Nom : </b>"+nom+"</p>";
-        html+="<p><b>Prénom : </b>"+prenom+"</p>";
-        html+="<p><b>Date de naissance (jj/mm/aaaa) : </b>"+ddn+"</p>";
-        html+="<p><b>Sexe : </b>"+sexe+"</p>";
-        html+="<p><b>Adresse e-mail : </b>"+mail+"</p>";
-        html+="<p><b>Adresse : </b>"+rue+", "+ville+", "+cp+"</p>";
+        infos="<p><b>Numéro licence : </b>"+licence+"</p>";
+        infos+="<p><b>Ligue d'affiliation : </b>"+ligue+"</p>";
+        infos+="<p><b>Nom : </b>"+nom+"</p>";
+        infos+="<p><b>Prénom : </b>"+prenom+"</p>";
+        infos+="<p><b>Date de naissance (jj/mm/aaaa) : </b>"+ddn+"</p>";
+        infos+="<p><b>Sexe : </b>"+sexe+"</p>";
+        infos+="<p><b>Adresse e-mail : </b>"+mail+"</p>";
+        infos+="<p><b>Adresse : </b>"+rue+", "+ville+", "+cp+"</p>";
 
-        $('#mesinformations #mesinfos').append(html);        
+        $('#mesinformations #mesinfos').html(infos);     
     }
     
+    /*-------------------Page Saisir frais ----------------------*/
+    $('#btnsaisirfrais').click(maFonctionListeMotifs);
+    function maFonctionListeMotifs(){
+        $.post("ajax/traitermotifs.php",{
+            
+        }, foncRetourMotifs, "json");
+    }
+    
+    function foncRetourMotifs(lesMotifs){
+        
+        var motifs="";
+        $('#saisirfrais #fraismotif').html(motifs);
+        
+        for(i=0; i<lesMotifs.length; i++){
+            var unMotif=lesMotifs[i];
+            var idMotif=unMotif['id_motif'];
+            var libelleMotif=unMotif['libelle'];
+            
+            motifs="<option value="+idMotif+">"+libelleMotif+"</option>";
+            $('#saisirfrais #fraismotif').append(motifs);
+        }
+        
+    }
+    
+    $('#btnenvoifrais').click(fonctionSaisieFrais);
+    function fonctionSaisieFrais(e){
+        e.preventDefault();
+        
+        var demandeurmail = $("#saisirfrais #liendemandeur").val();
+        var fraisnumlicence = $("#saisirfrais #fraisnumlicence").val();   
+        var fraisdate = $("#saisirfrais #fraisdate").val();
+        var fraismotif = $("#saisirfrais #fraismotif").val();
+        var fraistrajet = $("#saisirfrais #fraistrajet").val();
+        var fraiskm = $("#saisirfrais #fraiskm").val();
+        var fraispeage = $("#saisirfrais #fraispeage").val();
+        var fraisrepas = $("#saisirfrais #fraisrepas").val();
+        var fraishebergement = $("#saisirfrais #fraishebergement").val();
+        
+        if(fraisnumlicence != "" & fraisdate != "" & fraismotif != "" & fraistrajet != "" & fraiskm != "" & fraispeage != "" & fraisrepas != "" & fraishebergement != ""){
 
-})
+            $.post("ajax/traitersaisiefrais.php",{
+               "demandeurmail" : demandeurmail,
+               "fraisdate" : fraisdate,
+               "fraismotif" : fraismotif, 
+               "fraistrajet" : fraistrajet,
+               "fraiskm" : fraiskm,
+               "fraispeage" : fraispeage, 
+               "fraisrepas" : fraisrepas,
+               "fraishebergement" : fraishebergement},
+            foncRetourSaisieFrais, "json");
+            
+            $.post("ajax/traiterlienfrais.php",{
+              "demandeurmail" : demandeurmail,
+              "fraisnumlicence" : fraisnumlicence}, "json");
+            
+        } else{
+            $("#saisirfrais #message").css({color:'red'});
+            $("#saisirfrais #message").html("Erreur veuillez remplir tous les champs et vérifiez que votre adresse email est correcte..! ");
+        }  
+        
+    }
+    
+    function foncRetourSaisieFrais(data){
+        if(data == true){
+            document.location.href="#monbordereau";
+            $("#monbordereau #message").css({color:'green'});
+            $("#monbordereau #message").html("Frais bien enregistré, vous pouvez le consulter à tout moment en cliquant sur \"Afficher lignes de frais\" !");
+            
+        }else{
+            $("#saisirfrais #message").css({color:'red'});
+            $("#saisirfrais #message").html("Informations concernant les frais invalides..! ");
+        }
+    }
+    
+    /*-------------------Page Saisir Demandeurs ----------------------*/
+    $('#btnenvoidemandeurs').click(maFonctionEnvoiDemandeurs);
+    function maFonctionEnvoiDemandeurs(e){
+        e.preventDefault();
+        var demandeurmail = $("#saisirdemandeurs #demandeurmail").val();
+        var demandeurnom = $("#saisirdemandeurs #demandeurnom").val();
+        var demandeurprenom = $("#saisirdemandeurs #demandeurprenom").val();
+        var demandeuradresse = $("#saisirdemandeurs #demandeuradresse").val();
+        var demandeurcp = $("#saisirdemandeurs #demandeurcp").val();
+        var demandeurville = $("#saisirdemandeurs #demandeurville").val();
+        
+        if(demandeurmail != "" & demandeurnom != "" & demandeurprenom != "" & demandeuradresse != "" & demandeurcp != "" & demandeurville != ""){
+            $.post("ajax/traiterdemandeursfrais.php",{
+            "demandeurmail" : demandeurmail,
+            "demandeurnom" : demandeurnom,
+            "demandeurprenom" : demandeurprenom,
+            "demandeuradresse" : demandeuradresse,
+            "demandeurcp" : demandeurcp,
+            "demandeurville" : demandeurville},
+            foncRetourDemandeursFrais, "json");
+        }else{
+            $("#saisirdemandeurs #message").css({color:'red'});
+            $("#saisirdemandeurs #message").html("Veuillez remplir tous les champs ! ");
+        }
+        
+        function foncRetourDemandeursFrais(data){
+            if(data == false){
+                $("#saisirdemandeurs #message").css({color:'red'});
+                $("#saisirdemandeurs #message").html("Erreur : votre adresse e-mail existe deja dans la base de données ! ");
+            }else{
+                document.location.href="#saisirfrais";
+            }
+    }
+    }
+    
+    /*-------------------Page Afficher Frais ----------------------*/
+    $('#btnafficherfrais').click(maFonctionListeFrais);
+    function maFonctionListeFrais(){
+        $.post("ajax/traiternotedefrais.php",{
+               "numlicence" : window.numlicence
+           },
+           foncRetourListeFrais, "json");
+    }
+    
+    function foncRetourListeFrais(lesnotesdefrais){     
+        // frais kilométrique appliqué pour le remboursement
+        var fraiskilometrique = 0.28;
+        // montant total des notes de frais
+        var montanttotal=0;
+        
+        var lbl_frais="<p><b>Frais de déplacement</b></p><tr><th>Date</th><th>Motif</th><th>Trajet</th>";
+        lbl_frais+="<th>Kms parcourus</th><th>Coût Trajet</th><th>Péages</th><th>Repas</th><th>Hébergement</th><th>Total</th></tr>";
+        $('#afficherfrais #tbfrais').html(lbl_frais);
+              
+        for(i=0; i<lesnotesdefrais.length; i++){
+            var unFrais=lesnotesdefrais[i];
+            var date=unFrais['date'];
+            var motif=unFrais['motif'];
+            var trajet=unFrais['trajet'];
+            var km=unFrais['km'];
+            var peage=unFrais['coutpeage'];
+            var repas=unFrais['coutrepas'];
+            var hebergement=unFrais['couthebergement'];
+            var prenomDemandeur=unFrais['prenomDemandeur'];
+            var nomDemandeur=unFrais['nomDemandeur'];
+            var rueDemandeur=unFrais['rueDemandeur'];
+            var cpDemandeur=unFrais['cpDemandeur'];
+            var villeDemandeur=unFrais['villeDemandeur'];
+            
+            // cout du trajet calculé grâce au nb de km parcouris et des frais kilométriques
+            var couttrajet=(km*fraiskilometrique).toFixed(2);
+            // cout total pour une saisie de frais
+            var montant=(parseFloat(couttrajet)+parseFloat(peage)+parseFloat(repas)+parseFloat(hebergement));
+            
+            //ajout des montants à la valeur total
+            montanttotal+=montant;
+            
+            var lesfrais="<tr><td>"+date+"</td><td>"+motif+"</td><td>"+trajet+"</td><td>"+km+"</td><td>"+couttrajet+"</td><td>"+peage+"</td><td>"+repas+"</td><td>"+hebergement+"</td><td>"+montant+"</td></tr>";           
+            $('#afficherfrais #tbfrais').append(lesfrais);    
+        }    
+        
+        var montantfrais="<tr><td colspan=\"8\"><center><b>Montant total des frais de déplacement</b></center></td><td>"+montanttotal+"</td></tr>";
+        $('#afficherfrais #tbfrais').append(montantfrais);    
+        
+        // affichage identité du demandeur
+        var identited="<p><b>Demandeur : </b>"+prenomDemandeur+" "+nomDemandeur+"</p>";
+        identited+="<p><b>Adresse demandeur : </b>"+rueDemandeur+", "+cpDemandeur+" "+villeDemandeur+"</p>";
+        $('#afficherfrais #identitedemandeur').html(identited);
+        
+        // affichage des informations sur les adhérents concernés
+        
+        
+        // affichage montant total des dons
+        var totaldons = "<p><b>Montant total des dons : </b>"+montanttotal+"€</p>";
+        $('#afficherfrais #totaldons').html(totaldons);
+
+         
+    }
+       
+});

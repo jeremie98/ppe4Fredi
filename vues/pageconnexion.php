@@ -1,5 +1,7 @@
 <!-- Connexion -->
     <article id="connexion">
+            <input type="button" value="Retour" onclick="history.go(-1)">
+
             <h2 class="major">Connexion</h2>                       
             <form method="post" action="#">
                 <label for="login">Login</label><input type="text" placeholder="Adresse e-mail" name="login" id="login" value=""/><br/>

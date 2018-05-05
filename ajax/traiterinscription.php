@@ -15,5 +15,10 @@
     $pdo = PdoFredi::getPdo();
     $newadherent = $pdo->getInscription($numlicence, $mail, $mdp, $sexe, $nom, $prenom, $ddn, $numligue, $rue, $cp, $ville);
     
+//    // envoi du mail de confirmation
+//    if($newadherent == true){
+//        exec("fonctions/mail.php");
+//    }
+    
     echo json_encode($newadherent);
 ?>    
