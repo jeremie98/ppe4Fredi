@@ -1,5 +1,5 @@
 # ppe4Fredi
 
-Projet mobile groupe BTS [JQuery, Ajax/PHP]
+Projet Gestion de frais groupe BTS [JQuery, Ajax/PHP]
 
-Gestion de frais
+
